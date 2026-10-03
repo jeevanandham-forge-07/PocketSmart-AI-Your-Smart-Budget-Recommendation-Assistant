@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}User Dashboard - PocketSmart AI{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div>
+            <h1 style="font-size: 2.2rem; margin-bottom: 0.35rem;">
+                Hello, <span class="gradient-text">{{ user.full_name }}</span> 👋
+            </h1>
+            <p style="color: var(--text-secondary);">Manage your AI-powered lifestyle budgets and explore tailored recommendations.</p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+            <a href="/home-planner" class="btn btn-primary btn-sm btn-glow"><i class="fa-solid fa-plus"></i> New Home Plan</a>
+            <a href="/party-planner" class="btn btn-outline btn-sm"><i class="fa-solid fa-plus"></i> New Party Plan</a>
+            <a href="/jewelry-planner" class="btn btn-outline btn-sm"><i class="fa-solid fa-plus"></i> Style Jewelry</a>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(99, 102, 241, 0.15); color: var(--primary);">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Total Plans</span>
+                <span class="stat-value">{{ total_plans }}</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--success);">
+                <i class="fa-solid fa-wallet"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Total Budget</span>
+                <span class="stat-value">₹ {{ "{:,.0f}".format(total_budget_planned) }}</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(6, 182, 212, 0.15); color: var(--accent);">
+                <i class="fa-solid fa-piggy-bank"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Budget Saved</span>
+                <span class="stat-value">₹ {{ "{:,.0f}".format(total_budget_saved) }}</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: var(--warning);">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">AI Engine</span>
+                <span class="stat-value" style="font-size: 1.15rem; color: #fcd34d;">Active</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Planners Launch -->
+    <div style="margin-bottom: 3rem;">
+        <h3 style="font-size: 1.35rem; margin-bottom: 1.25rem;">Start a New Budget Plan</h3>
+        <div class="planners-grid" style="margin-bottom: 0;">
+            <div class="planner-card">
+                <div>
+                    <div class="planner-icon-box icon-home">
+                        <i class="fa-solid fa-couch"></i>
+                    </div>
+                    <h4 class="planner-title" style="font-size: 1.25rem;">Home Interior</h4>
+                    <p class="planner-desc">Living room, bedroom sets, lighting, fans, dining & decor.</p>
+                </div>
+                <a href="/home-planner" class="btn btn-primary btn-sm btn-block">Open Planner</a>
+            </div>
+
+            <div class="planner-card">
+                <div>
+                    <div class="planner-icon-box icon-party">
+                        <i class="fa-solid fa-champagne-glasses"></i>
+                    </div>
+                    <h4 class="planner-title" style="font-size: 1.25rem;">Party & Events</h4>
+                    <p class="planner-desc">Catering, banquet venues, DJ sound, cake & theme decor.</p>
+                </div>
+                <a href="/party-planner" class="btn btn-primary btn-sm btn-block">Open Planner</a>
+            </div>
+
+            <div class="planner-card">
+                <div>
+                    <div class="planner-icon-box icon-jewelry">
+                        <i class="fa-solid fa-gem"></i>
+                    </div>
+                    <h4 class="planner-title" style="font-size: 1.25rem;">Jewelry & Styling</h4>
+                    <p class="planner-desc">Multimodal outfit coordination with necklaces, earrings & bangles.</p>
+                </div>
+                <a href="/jewelry-planner" class="btn btn-primary btn-sm btn-block">Open Planner</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Recommendations -->
+    <div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+            <h3 style="font-size: 1.35rem;">Recent Recommendations</h3>
+            {% if recent_plans %}
+            <a href="/history" style="color: var(--primary); font-size: 0.9rem; font-weight: 600;">View All History <i class="fa-solid fa-arrow-right"></i></a>
+            {% endif %}
+        </div>
+
+        {% if recent_plans %}
+        <div class="history-grid">
+            {% for plan in recent_plans %}
+            <div class="history-card">
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+                        <span class="rec-cat-badge">
+                            {% if plan.planner_type == 'home' %}<i class="fa-solid fa-couch"></i> Home Interior
+                            {% elif plan.planner_type == 'party' %}<i class="fa-solid fa-champagne-glasses"></i> Party & Event
+                            {% else %}<i class="fa-solid fa-gem"></i> Jewelry
+                            {% endif %}
+                        </span>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">{{ plan.created_at.strftime('%d %b %Y') }}</span>
+                    </div>
+
+                    <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">{{ plan.title }}</h4>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1.25rem; font-size: 0.88rem;">
+                        <div>
+                            <span style="color: var(--text-muted); font-size: 0.75rem; display: block;">TARGET BUDGET</span>
+                            <strong style="color: var(--text-primary);">₹ {{ "{:,.0f}".format(plan.user_budget) }}</strong>
+                        </div>
+                        <div>
+                            <span style="color: var(--text-muted); font-size: 0.75rem; display: block;">EST. SPENDING</span>
+                            <strong style="color: var(--success);">₹ {{ "{:,.0f}".format(plan.total_estimated_cost) }}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+                    <a href="/history/{{ plan.id }}" class="btn btn-outline btn-sm btn-block">
+                        <i class="fa-regular fa-eye"></i> View Plan
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="glass-card" style="text-align: center; padding: 3rem 1.5rem;">
+            <div style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;">
+                <i class="fa-regular fa-folder-open"></i>
+            </div>
+            <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem;">No recommendations generated yet</h4>
+            <p style="color: var(--text-secondary); max-width: 460px; margin: 0 auto 1.5rem;">
+                Choose one of our smart planners above to create your first budget-optimized recommendation plan.
+            </p>
+            <a href="/home-planner" class="btn btn-primary btn-glow">
+                <i class="fa-solid fa-couch"></i> Create First Home Plan
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

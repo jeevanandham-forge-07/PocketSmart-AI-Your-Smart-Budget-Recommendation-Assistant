@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}PocketSmart AI - Your Smart Budget & Recommendation Assistant{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-badge">
+        <i class="fa-solid fa-sparkles"></i> Powered by Google Gemini Multimodal AI
+    </div>
+    <h1 class="hero-title">
+        Smart Budgeting & AI Recommendations for <span class="gradient-text">Life's Big Moments</span>
+    </h1>
+    <p class="hero-subtitle">
+        Eliminate guesswork across home interior design, unforgettable parties, and coordinated jewelry styling.
+        PocketSmart AI creates balanced, platform-aware budgets with deterministic mathematical precision.
+    </p>
+
+    <div class="hero-ctas">
+        {% if user %}
+        <a href="/dashboard" class="btn btn-primary btn-lg btn-glow">
+            <i class="fa-solid fa-gauge-high"></i> Go to Dashboard
+        </a>
+        {% else %}
+        <a href="/register" class="btn btn-primary btn-lg btn-glow">
+            <i class="fa-solid fa-bolt"></i> Start Planning for Free
+        </a>
+        <a href="/login" class="btn btn-secondary btn-lg">
+            <i class="fa-solid fa-right-to-bracket"></i> Sign In
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- 3 Core Planners Cards -->
+    <div class="planners-grid">
+        <!-- Home Interior Planner -->
+        <div class="planner-card">
+            <div>
+                <div class="planner-icon-box icon-home">
+                    <i class="fa-solid fa-couch"></i>
+                </div>
+                <h3 class="planner-title">Home Interior Planner</h3>
+                <p class="planner-desc">
+                    Furnish and decorate living rooms, bedrooms, lighting, fans, and dining spaces while strictly respecting your budget limits.
+                </p>
+                <ul class="planner-features">
+                    <li><i class="fa-solid fa-circle-check"></i> Room-by-room cost breakdown</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Furniture, lighting & decor bundles</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Direct search links for IKEA & Amazon</li>
+                </ul>
+            </div>
+            <a href="/home-planner" class="btn btn-outline btn-block">
+                Launch Home Planner <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- Party Planner -->
+        <div class="planner-card">
+            <div>
+                <div class="planner-icon-box icon-party">
+                    <i class="fa-solid fa-champagne-glasses"></i>
+                </div>
+                <h3 class="planner-title">Party Budget Planner</h3>
+                <p class="planner-desc">
+                    Organize birthdays, weddings, anniversaries, and corporate events with smart allocation across venue, catering, decor & entertainment.
+                </p>
+                <ul class="planner-features">
+                    <li><i class="fa-solid fa-circle-check"></i> Per-guest food & catering allocation</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Venue & theme decoration balancing</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Sourcing with Swiggy, Zomato & OYO</li>
+                </ul>
+            </div>
+            <a href="/party-planner" class="btn btn-outline btn-block">
+                Launch Party Planner <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- Jewelry Planner -->
+        <div class="planner-card">
+            <div>
+                <div class="planner-icon-box icon-jewelry">
+                    <i class="fa-solid fa-gem"></i>
+                </div>
+                <h3 class="planner-title">Jewelry & Styling</h3>
+                <p class="planner-desc">
+                    Multimodal AI visual assistant that analyzes your outfit photo and recommends perfectly matched jewelry for any special occasion.
+                </p>
+                <ul class="planner-features">
+                    <li><i class="fa-solid fa-circle-check"></i> Outfit color palette & style vision</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Neckwear, earrings & bracelet curation</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Sourcing via CaratLane, Myntra & Amazon</li>
+                </ul>
+            </div>
+            <a href="/jewelry-planner" class="btn btn-outline btn-block">
+                Launch Jewelry Planner <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="page-container" id="how-it-works" style="padding-top: 0;">
+    <div class="section-header">
+        <span class="section-tag">Intelligent Workflow</span>
+        <h2 class="section-title">How PocketSmart AI Works</h2>
+        <p style="color: var(--text-secondary);">From your budget constraint to real shopping links in 4 effortless steps.</p>
+    </div>
+
+    <div class="steps-grid">
+        <div class="step-card">
+            <div class="step-num">01</div>
+            <h4 class="step-title">Enter Budget & Context</h4>
+            <p class="step-desc">Specify your target budget, room types, guest counts, occasions, or upload an outfit picture.</p>
+        </div>
+
+        <div class="step-card">
+            <div class="step-num">02</div>
+            <h4 class="step-title">GenAI Processing</h4>
+            <p class="step-desc">Gemini analyzes your aesthetic requirements, color compatibility, and functional needs.</p>
+        </div>
+
+        <div class="step-card">
+            <div class="step-num">03</div>
+            <h4 class="step-title">Deterministic Engine</h4>
+            <p class="step-desc">Our Python budget engine mathematically validates and rebalances every single item to prevent overspending.</p>
+        </div>
+
+        <div class="step-card">
+            <div class="step-num">04</div>
+            <h4 class="step-title">Explore & Shop</h4>
+            <p class="step-desc">Review category allocations, reasons, and jump directly to Amazon, Flipkart, IKEA, Swiggy or OYO.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section as specified in DOCX -->
+<section class="page-container" id="testimonials">
+    <div class="section-header">
+        <span class="section-tag">Success Stories</span>
+        <h2 class="section-title">Trusted by Smart Planners</h2>
+    </div>
+
+    <div class="planners-grid">
+        <div class="glass-card">
+            <div style="color: var(--warning); margin-bottom: 1rem;">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 1.25rem; font-style: italic;">
+                "I furnished my 2BHK living room and bedroom under ₹1,20,000. PocketSmart AI balanced lighting, sofa, and bed without exceeding a single rupee."
+            </p>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; font-weight: 700;">AP</div>
+                <div>
+                    <h5 style="font-size: 0.95rem;">Ananya Patel</h5>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Home Interior User, Bangalore</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <div style="color: var(--warning); margin-bottom: 1rem;">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 1.25rem; font-style: italic;">
+                "Planning our 50-guest birthday was stress-free. The food allocation and venue suggestions on Swiggy and OYO fit our ₹60,000 budget perfectly."
+            </p>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--gradient-emerald); display: flex; align-items: center; justify-content: center; font-weight: 700;">RK</div>
+                <div>
+                    <h5 style="font-size: 0.95rem;">Rahul Kumar</h5>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Party Planner User, Chennai</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <div style="color: var(--warning); margin-bottom: 1rem;">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 1.25rem; font-style: italic;">
+                "I uploaded a picture of my wedding reception saree. The AI detected the maroon and gold hues and recommended the most stunning Kundan set!"
+            </p>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--gradient-gold); display: flex; align-items: center; justify-content: center; font-weight: 700;">PS</div>
+                <div>
+                    <h5 style="font-size: 0.95rem;">Pooja Sharma</h5>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Jewelry Stylist User, Mumbai</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

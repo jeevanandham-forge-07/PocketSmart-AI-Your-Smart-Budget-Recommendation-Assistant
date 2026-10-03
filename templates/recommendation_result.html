@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block title %}{{ plan.title }} - PocketSmart AI{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <!-- Top Action Bar -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <a href="{% if user %}/dashboard{% else %}/{% endif %}" class="btn btn-outline btn-sm">
+            <i class="fa-solid fa-arrow-left"></i> Back to {% if user %}Dashboard{% else %}Home{% endif %}
+        </a>
+
+        <div style="display: flex; gap: 0.75rem;">
+            <button class="btn btn-secondary btn-sm" id="printPlanBtn">
+                <i class="fa-solid fa-print"></i> Print / Save PDF
+            </button>
+            <a href="{% if plan.planner_type == 'home' %}/home-planner{% elif plan.planner_type == 'party' %}/party-planner{% else %}/jewelry-planner{% endif %}" class="btn btn-primary btn-sm">
+                <i class="fa-solid fa-rotate-right"></i> Plan Another
+            </a>
+        </div>
+    </div>
+
+    <!-- Warnings / Rebalance Banner if any -->
+    {% if plan.warnings %}
+    {% for warn in plan.warnings %}
+    <div class="alert alert-warning">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>{{ warn }}</span>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- Main Results Hero Card -->
+    <div class="results-hero-card">
+        <div class="results-top-bar">
+            <div>
+                <span class="rec-cat-badge" style="margin-bottom: 0.5rem; display: inline-block;">
+                    {% if plan.planner_type == 'home' %}<i class="fa-solid fa-couch"></i> Home Interior
+                    {% elif plan.planner_type == 'party' %}<i class="fa-solid fa-champagne-glasses"></i> Party & Events
+                    {% else %}<i class="fa-solid fa-gem"></i> Jewelry & Styling
+                    {% endif %}
+                </span>
+                <h1 style="font-size: 2.2rem; margin-bottom: 0.5rem;">{{ plan.title }}</h1>
+                <p style="color: var(--text-secondary); max-width: 780px; font-size: 1rem;">
+                    {{ plan.summary }}
+                </p>
+            </div>
+            
+            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem;">
+                {% if plan.is_ai_generated and plan.ai_model %}
+                <div class="ai-badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399;">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Generated &bull; Gemini &bull; {{ plan.ai_model }}
+                </div>
+                {% else %}
+                <div class="ai-badge" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171;">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Source: {{ plan.response_source }}
+                </div>
+                {% endif %}
+                <div class="ai-badge">
+                    <i class="fa-solid fa-shield-check"></i> Budget Engine Validated
+                </div>
+            </div>
+        </div>
+
+        <!-- Budget Metric Summary Cards -->
+        <div class="results-budget-summary">
+            <div class="budget-metric-card">
+                <div class="metric-title">Target Budget</div>
+                <div class="metric-amount primary">
+                    ₹ {{ "{:,.2f}".format(plan.original_budget) }}
+                </div>
+            </div>
+
+            <div class="budget-metric-card highlight">
+                <div class="metric-title">Total Estimated Spending</div>
+                <div class="metric-amount success">
+                    ₹ {{ "{:,.2f}".format(plan.total_estimated_cost) }}
+                </div>
+            </div>
+
+            <div class="budget-metric-card">
+                <div class="metric-title">Remaining Savings</div>
+                <div class="metric-amount" style="color: var(--accent);">
+                    ₹ {{ "{:,.2f}".format(plan.remaining_budget) }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Allocations Breakdown -->
+        {% if plan.category_breakdown %}
+        <div class="allocation-breakdown">
+            <h4 style="font-size: 1.1rem; margin-bottom: 0.25rem;">Budget Allocation by Category</h4>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Proportional spending distribution calculated for optimal balance.</p>
+            
+            <div class="allocation-bars">
+                {% for alloc in plan.category_breakdown %}
+                <div class="allocation-bar-item">
+                    <div class="alloc-labels">
+                        <strong>{{ alloc.category }}</strong>
+                        <span>₹ {{ "{:,.2f}".format(alloc.allocated_amount) }} ({{ alloc.percentage }}%)</span>
+                    </div>
+                    <div class="alloc-track">
+                        <div class="alloc-fill" style="width: {{ alloc.percentage }}%;"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Multimodal Outfit Analysis (If present) -->
+    {% if plan.outfit_analysis or plan.outfit_image_url %}
+    <div class="outfit-analysis-card">
+        {% if plan.outfit_image_url %}
+        <div>
+            <img src="{{ plan.outfit_image_url }}" alt="Uploaded Outfit" class="outfit-img-thumb">
+        </div>
+        {% endif %}
+        
+        <div>
+            <div style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--warning); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Gemini Multimodal Visual Analysis
+            </div>
+            
+            {% if plan.outfit_analysis.style_vibe %}
+            <h3 style="font-size: 1.35rem; margin-bottom: 0.5rem;">{{ plan.outfit_analysis.style_vibe }}</h3>
+            {% endif %}
+
+            <p style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 1rem; line-height: 1.55;">
+                {{ plan.outfit_analysis.jewelry_coordination_advice }}
+            </p>
+
+            {% if plan.outfit_analysis.dominant_colors %}
+            <div style="margin-top: 0.75rem;">
+                <span style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 0.35rem;">Identified Palette</span>
+                <div class="color-swatches">
+                    {% for col in plan.outfit_analysis.dominant_colors %}
+                    <span class="swatch-tag" style="border: 1px solid rgba(255, 255, 255, 0.2);"><i class="fa-solid fa-circle" style="font-size: 0.6rem; color: var(--primary);"></i> {{ col }}</span>
+                    {% endfor %}
+                    {% for col in plan.outfit_analysis.secondary_colors %}
+                    <span class="swatch-tag" style="border: 1px solid rgba(255, 255, 255, 0.2);"><i class="fa-solid fa-circle" style="font-size: 0.6rem; color: var(--accent);"></i> {{ col }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Recommendation Items Section -->
+    <div style="margin-top: 3rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.75rem;">
+            <div>
+                <h2 style="font-size: 1.75rem; margin-bottom: 0.25rem;">Curated Recommendations</h2>
+                <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                    {{ plan.items|length }} items selected and balanced within your budget limit.
+                </p>
+            </div>
+        </div>
+
+        <div class="recommendation-cards-grid">
+            {% for item in plan.items %}
+            <div class="rec-card">
+                <div>
+                    <div class="rec-header">
+                        <span class="rec-cat-badge">{{ item.category }}</span>
+                        <div class="rec-price-block">
+                            <span class="rec-est-label">Estimated Price</span>
+                            <div class="rec-price">₹ {{ "{:,.2f}".format(item.estimated_price) }}</div>
+                            {% if item.quantity > 1 %}
+                            <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">
+                                Qty: {{ item.quantity }} = ₹ {{ "{:,.2f}".format(item.subtotal) }}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <h4 class="rec-item-title">{{ item.item_name }}</h4>
+                    <p class="rec-desc">{{ item.description }}</p>
+
+                    <div class="rec-reason-box">
+                        <strong style="color: #a5b4fc; display: block; margin-bottom: 0.2rem; font-size: 0.75rem; text-transform: uppercase;">
+                            <i class="fa-solid fa-lightbulb"></i> Why Recommended
+                        </strong>
+                        {{ item.reason }}
+                    </div>
+                </div>
+
+                <!-- Shopping / Sourcing Links -->
+                <div>
+                    <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 0.5rem;">
+                        Search on Platforms
+                    </span>
+                    <div class="rec-links-row">
+                        {% if item.platform_links %}
+                        {% for plat_name, plat_url in item.platform_links.items() %}
+                        <a href="{{ plat_url }}" target="_blank" rel="noopener noreferrer" class="plat-btn">
+                            {% if plat_name == 'Amazon' %}<i class="fa-brands fa-amazon"></i>
+                            {% elif plat_name == 'Flipkart' %}<i class="fa-solid fa-store"></i>
+                            {% elif plat_name == 'IKEA' %}<i class="fa-solid fa-couch"></i>
+                            {% elif plat_name == 'Swiggy' %}<i class="fa-solid fa-utensils"></i>
+                            {% elif plat_name == 'Zomato' %}<i class="fa-solid fa-burger"></i>
+                            {% elif plat_name == 'OYO' %}<i class="fa-solid fa-hotel"></i>
+                            {% elif plat_name == 'MakeMyTrip' %}<i class="fa-solid fa-plane"></i>
+                            {% elif plat_name == 'CaratLane' %}<i class="fa-solid fa-gem"></i>
+                            {% elif plat_name == 'Myntra' %}<i class="fa-solid fa-shirt"></i>
+                            {% else %}<i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            {% endif %}
+                            {{ plat_name }}
+                        </a>
+                        {% endfor %}
+                        {% else %}
+                        <a href="https://www.google.com/search?q={{ item.search_term }}" target="_blank" rel="noopener noreferrer" class="plat-btn">
+                            <i class="fa-brands fa-google"></i> Google Search
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

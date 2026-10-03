@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PocketSmart AI - Your Smart Budget & Recommendation Assistant{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}GenAI-powered cross-platform budget and lifestyle recommendation assistant for home interiors, party planning, and jewelry coordination.{% endblock %}">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Main Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="theme-dark">
+    <!-- Top Navigation Bar -->
+    <header class="site-header" id="siteHeader">
+        <div class="nav-container">
+            <a href="/" class="brand-logo">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-title">PocketSmart<span class="gradient-text"> AI</span></span>
+                    <span class="brand-subtitle">Smart Budget Assistant</span>
+                </div>
+            </a>
+
+            <nav class="main-nav" id="mainNav">
+                <ul class="nav-links">
+                    <li><a href="/" class="nav-link {% if request.url.path == '/' %}active{% endif %}"><i class="fa-solid fa-house"></i> Home</a></li>
+                    <li><a href="/home-planner" class="nav-link {% if 'home' in request.url.path %}active{% endif %}"><i class="fa-solid fa-couch"></i> Home Interior</a></li>
+                    <li><a href="/party-planner" class="nav-link {% if 'party' in request.url.path %}active{% endif %}"><i class="fa-solid fa-champagne-glasses"></i> Party & Events</a></li>
+                    <li><a href="/jewelry-planner" class="nav-link {% if 'jewelry' in request.url.path %}active{% endif %}"><i class="fa-solid fa-gem"></i> Jewelry & Styling</a></li>
+                    {% if user %}
+                    <li><a href="/dashboard" class="nav-link {% if 'dashboard' in request.url.path %}active{% endif %}"><i class="fa-solid fa-gauge-high"></i> Dashboard</a></li>
+                    <li><a href="/history" class="nav-link {% if 'history' in request.url.path %}active{% endif %}"><i class="fa-solid fa-clock-rotate-left"></i> History</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                {% if user %}
+                <div class="user-profile-menu">
+                    <span class="user-greeting">
+                        <i class="fa-solid fa-circle-user"></i> {{ user.full_name.split()[0] }}
+                    </span>
+                    <a href="/logout" class="btn btn-outline btn-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                </div>
+                {% else %}
+                <div class="auth-buttons">
+                    <a href="/login" class="btn btn-outline btn-sm">Sign In</a>
+                    <a href="/register" class="btn btn-primary btn-sm btn-glow">Get Started</a>
+                </div>
+                {% endif %}
+                
+                <button class="mobile-toggle" id="mobileMenuToggle" aria-label="Toggle navigation">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-content" id="mainContent">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Global Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-card">
+            <div class="spinner-ring">
+                <div class="spinner-core"></div>
+            </div>
+            <h3 class="loading-title" id="loadingTitle">Analyzing Your Budget with Gemini AI</h3>
+            <p class="loading-subtitle" id="loadingSubtitle">Structuring personalized recommendations from Amazon, IKEA, Flipkart & more...</p>
+            <div class="loading-progress-bar">
+                <div class="loading-progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="brand-logo footer-logo">
+                        <div class="brand-icon">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <div class="brand-text">
+                            <span class="brand-title">PocketSmart<span class="gradient-text"> AI</span></span>
+                        </div>
+                    </div>
+                    <p class="footer-desc">
+                        GenAI-powered cross-platform smart budget allocation and product recommendation assistant.
+                        Optimizing lifestyle planning across Home Interiors, Events & Jewelry.
+                    </p>
+                    <div class="footer-socials">
+                        <a href="https://github.com" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                        <a href="https://linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                        <a href="https://twitter.com" target="_blank" rel="noopener" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4 class="footer-heading">AI Planners</h4>
+                    <ul class="footer-links">
+                        <li><a href="/home-planner"><i class="fa-solid fa-chevron-right"></i> Home Interior Planner</a></li>
+                        <li><a href="/party-planner"><i class="fa-solid fa-chevron-right"></i> Party Budget Planner</a></li>
+                        <li><a href="/jewelry-planner"><i class="fa-solid fa-chevron-right"></i> Jewelry & Outfit Planner</a></li>
+                        <li><a href="/dashboard"><i class="fa-solid fa-chevron-right"></i> User Dashboard</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 class="footer-heading">Supported Platforms</h4>
+                    <div class="platform-tags">
+                        <span class="plat-tag"><i class="fa-brands fa-amazon"></i> Amazon</span>
+                        <span class="plat-tag"><i class="fa-solid fa-store"></i> Flipkart</span>
+                        <span class="plat-tag"><i class="fa-solid fa-couch"></i> IKEA</span>
+                        <span class="plat-tag"><i class="fa-solid fa-utensils"></i> Swiggy</span>
+                        <span class="plat-tag"><i class="fa-solid fa-burger"></i> Zomato</span>
+                        <span class="plat-tag"><i class="fa-solid fa-hotel"></i> OYO</span>
+                        <span class="plat-tag"><i class="fa-solid fa-gem"></i> CaratLane</span>
+                        <span class="plat-tag"><i class="fa-solid fa-shirt"></i> Myntra</span>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4 class="footer-heading">Technology</h4>
+                    <p class="tech-stack-desc">
+                        Powered by <strong>Google Gemini Flash</strong> multimodal intelligence, <strong>FastAPI</strong>, deterministic Python budget arithmetic, and <strong>SQLAlchemy</strong>.
+                    </p>
+                    <div class="ai-badge">
+                        <i class="fa-solid fa-shield-halved"></i> 100% Deterministic Financial Safety
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 PocketSmart AI. Built for Smart Budgeting & Recommendations.</p>
+                <div class="footer-bottom-links">
+                    <a href="/health">System Status</a>
+                    <span>•</span>
+                    <a href="/#about">Architecture</a>
+                    <span>•</span>
+                    <a href="/#faq">FAQ</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Main JavaScript -->
+    <script src="/static/js/app.js"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

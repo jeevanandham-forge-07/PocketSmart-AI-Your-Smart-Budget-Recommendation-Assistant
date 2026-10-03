@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Sign In - PocketSmart AI{% endblock %}
+
+{% block content %}
+<div class="page-container" style="display: flex; align-items: center; justify-content: center; min-height: 75vh;">
+    <div class="glass-card" style="max-width: 440px; width: 100%;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div class="brand-icon" style="margin: 0 auto 1rem;">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <h2 style="font-size: 1.75rem; margin-bottom: 0.5rem;">Welcome Back</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Sign in to access your saved budgets and AI planners.</p>
+        </div>
+
+        {% if error_message %}
+        <div class="alert alert-danger">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>{{ error_message }}</span>
+        </div>
+        {% endif %}
+
+        {% if success_message %}
+        <div class="alert alert-success">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>{{ success_message }}</span>
+        </div>
+        {% endif %}
+
+        <form action="/login" method="POST">
+            <div class="form-group">
+                <label class="form-label" for="login">Email or Username</label>
+                <div class="input-addon-wrapper">
+                    <span class="input-addon-prefix"><i class="fa-regular fa-envelope"></i></span>
+                    <input type="text" id="login" name="login" class="form-control" placeholder="user@example.com or username" value="{{ login or '' }}" required autofocus>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <div class="input-addon-wrapper">
+                    <span class="input-addon-prefix"><i class="fa-solid fa-key"></i></span>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg btn-glow" style="margin-top: 1.5rem;">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.75rem; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                Don't have an account? <a href="/register" style="color: var(--primary); font-weight: 600;">Create Account</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

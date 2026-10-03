@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}Home Interior Budget Planner - PocketSmart AI{% endblock %}
+
+{% block content %}
+<div class="page-container" style="max-width: 900px;">
+    <!-- Page Header -->
+    <div style="text-align: center; margin-bottom: 2.5rem;">
+        <div class="planner-icon-box icon-home" style="margin: 0 auto 1.25rem;">
+            <i class="fa-solid fa-couch"></i>
+        </div>
+        <h1 style="font-size: 2.4rem; margin-bottom: 0.5rem;">Home Interior <span class="gradient-text">Budget Planner</span></h1>
+        <p style="color: var(--text-secondary); max-width: 620px; margin: 0 auto;">
+            Specify your room layout, desired furniture, lighting, and aesthetic taste. Gemini AI and our budget engine will create a complete balanced decor package.
+        </p>
+    </div>
+
+    {% if error_message %}
+    <div class="alert alert-danger">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>{{ error_message }}</span>
+    </div>
+    {% endif %}
+
+    <div class="glass-card">
+        <form action="/generate-home" method="POST" class="planner-form" data-planner-type="home">
+            <!-- 1. Budget Section -->
+            <div style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 1.5rem; margin-bottom: 1.75rem;">
+                <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: #a5b4fc;">
+                    <i class="fa-solid fa-wallet"></i> 1. Budget & Currency
+                </h3>
+                
+                <div class="input-currency-row">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="currency">Currency</label>
+                        <select name="currency" id="currency" class="form-control">
+                            <option value="INR" selected>₹ INR</option>
+                            <option value="USD">$ USD</option>
+                            <option value="EUR">€ EUR</option>
+                            <option value="GBP">£ GBP</option>
+                            <option value="AED">AED</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="budget">
+                            Total Interior Budget <span class="label-desc">Required</span>
+                        </label>
+                        <div class="input-addon-wrapper">
+                            <span class="input-addon-prefix">₹</span>
+                            <input type="number" step="any" min="1000" id="budget" name="budget" class="form-control" placeholder="e.g. 100000" value="100000" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Room Configuration -->
+            <div style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 1.5rem; margin-bottom: 1.75rem;">
+                <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: #a5b4fc;">
+                    <i class="fa-solid fa-house-chimney"></i> 2. Rooms to Decorate
+                </h3>
+
+                <div class="checkbox-grid">
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="living_room" value="true" checked>
+                        <span class="check-label"><i class="fa-solid fa-couch"></i> Living Room</span>
+                    </label>
+
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="kitchen" value="true" checked>
+                        <span class="check-label"><i class="fa-solid fa-kitchen-set"></i> Kitchen</span>
+                    </label>
+
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="dining_room" value="true" checked>
+                        <span class="check-label"><i class="fa-solid fa-utensils"></i> Dining Room</span>
+                    </label>
+                </div>
+
+                <div class="form-group" style="margin-top: 1.25rem; margin-bottom: 0;">
+                    <label class="form-label" for="bedroom_count">
+                        Number of Bedrooms: <span class="slider-val-badge" id="bedCountBadge">2</span>
+                    </label>
+                    <input type="range" min="0" max="6" value="2" id="bedroom_count" name="bedroom_count" data-badge-target="bedCountBadge">
+                </div>
+            </div>
+
+            <!-- 3. Fixtures & Counts -->
+            <div style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 1.5rem; margin-bottom: 1.75rem;">
+                <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: #a5b4fc;">
+                    <i class="fa-solid fa-lightbulb"></i> 3. Fixtures & Units Needed
+                </h3>
+
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label class="form-label" for="lights_count">
+                            Lights / Fixtures: <span class="slider-val-badge" id="lightsBadge">10</span>
+                        </label>
+                        <input type="range" min="0" max="40" value="10" id="lights_count" name="lights_count" data-badge-target="lightsBadge">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="fans_count">
+                            Ceiling Fans: <span class="slider-val-badge" id="fansBadge">3</span>
+                        </label>
+                        <input type="range" min="0" max="12" value="3" id="fans_count" name="fans_count" data-badge-target="fansBadge">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="dining_table_count">
+                            Dining Tables: <span class="slider-val-badge" id="diningBadge">1</span>
+                        </label>
+                        <input type="range" min="0" max="4" value="1" id="dining_table_count" name="dining_table_count" data-badge-target="diningBadge">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Style & Aesthetics -->
+            <div style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 1.5rem; margin-bottom: 1.75rem;">
+                <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: #a5b4fc;">
+                    <i class="fa-solid fa-palette"></i> 4. Style & Aesthetic Preferences
+                </h3>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label class="form-label" for="preferred_style">Design Style</label>
+                        <select name="preferred_style" id="preferred_style" class="form-control">
+                            <option value="Modern" selected>Modern & Contemporary</option>
+                            <option value="Minimalist">Minimalist</option>
+                            <option value="Scandinavian">Scandinavian (Light woods & neutral)</option>
+                            <option value="Traditional Indian">Traditional Indian / Ethnic</option>
+                            <option value="Industrial">Industrial (Metal & Rustic)</option>
+                            <option value="Bohemian">Bohemian (Warm, Eclectic)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="color_preferences">Color Palette / Accents</label>
+                        <input type="text" id="color_preferences" name="color_preferences" class="form-control" placeholder="e.g. Warm earthy, Beige & Navy, Emerald green" value="Warm Earthy Neutrals">
+                    </div>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label class="form-label" for="furniture_requirements">Furniture Preferences</label>
+                        <input type="text" id="furniture_requirements" name="furniture_requirements" class="form-control" placeholder="e.g. L-shaped sectional sofa, Queen bed with storage" value="Comfortable 3-seater sofa, King bed">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="decor_requirements">Decor Preferences</label>
+                        <input type="text" id="decor_requirements" name="decor_requirements" class="form-control" placeholder="e.g. Framed wall art, warm curtains, indoor plants" value="Framed wall art, curtains & rugs">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="additional_requirements">Additional Requirements / Notes (Optional)</label>
+                    <textarea id="additional_requirements" name="additional_requirements" class="form-control" placeholder="Any specific requirements, compact apartment constraints, pet-friendly fabrics..."></textarea>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary btn-block btn-lg btn-glow">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate AI Home Budget & Recommendations
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

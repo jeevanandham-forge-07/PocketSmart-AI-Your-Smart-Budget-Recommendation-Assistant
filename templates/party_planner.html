@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Party Budget Planner - PocketSmart AI{% endblock %}
+
+{% block content %}
+<div class="page-container" style="max-width: 900px;">
+    <!-- Page Header -->
+    <div style="text-align: center; margin-bottom: 2.5rem;">
+        <div class="planner-icon-box icon-party" style="margin: 0 auto 1.25rem;">
+            <i class="fa-solid fa-champagne-glasses"></i>
+        </div>
+        <h1 style="font-size: 2.4rem; margin-bottom: 0.5rem;">Party & Event <span class="gradient-text">Budget Planner</span></h1>
+        <p style="color: var(--text-secondary); max-width: 620px; margin: 0 auto;">
+            Calculate per-guest food allocations, venue rentals, music, cakes, and decor across top providers like Swiggy, Zomato, OYO, and Amazon.
+        </p>
+    </div>
+
+    {% if error_message %}
+    <div class="alert alert-danger">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>{{ error_message }}</span>
+    </div>
+    {% endif %}
+
+    <div class="glass-card">
+        <form action="/generate-party" method="POST" class="planner-form" data-planner-type="party">
+            <!-- 1. Budget & Event Essentials -->
+            <div style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 1.5rem; margin-bottom: 1.75rem;">
+                <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: #f472b6;">
+                    <i class="fa-solid fa-calendar-check"></i> 1. Event Essentials & Budget
+                </h3>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label class="form-label" for="budget">Total Event Budget <span class="label-desc">Required</span></label>
+                        <div class="input-addon-wrapper">
+                            <span class="input-addon-prefix">₹</span>
+                            <input type="number" step="any" min="1000" id="budget" name="budget" class="form-control" placeholder="e.g. 75000" value="75000" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="guest_count">Estimated Guests <span class="label-desc">Required</span></label>
+                        <div class="input-addon-wrapper">
+                            <span class="input-addon-prefix"><i class="fa-solid fa-users"></i></span>
+                            <input type="number" min="1" max="5000" id="guest_count" name="guest_count" class="form-control" placeholder="e.g. 50" value="50" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label class="form-label" for="event_type">Event Type</label>
+                        <select name="event_type" id="event_type" class="form-control">
+                            <option value="Birthday Party" selected>Birthday Party</option>
+                            <option value="Wedding / Reception">Wedding / Reception</option>
+                            <option value="Anniversary Celebration">Anniversary</option>
+                            <option value="Corporate Event / Gala">Corporate Event</option>
+                            <option value="Family Gathering">Family Gathering</option>
+                            <option value="House Party">House Party / Get-together</option>
+                            <option value="Engagement Ceremony">Engagement Ceremony</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="city_location">City / Location</label>
+                        <input type="text" id="city_location" name="city_location" class="form-control" placeholder="e.g. Chennai, Bangalore, Delhi" value="Chennai" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="currency">Currency</label>
+                        <select name="currency" id="currency" class="form-control">
+                            <option value="INR" selected>₹ INR</option>
+                            <option value="USD">$ USD</option>
+                            <option value="EUR">€ EUR</option>
+                            <option value="AED">AED</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Services Required -->
+            <div style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 1.5rem; margin-bottom: 1.75rem;">
+                <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: #f472b6;">
+                    <i class="fa-solid fa-list-check"></i> 2. Services & Vendors Required
+                </h3>
+
+                <div class="checkbox-grid">
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="catering_required" value="true" checked>
+                        <span class="check-label"><i class="fa-solid fa-utensils"></i> Catering / Buffet</span>
+                    </label>
+
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="venue_required" value="true" checked>
+                        <span class="check-label"><i class="fa-solid fa-hotel"></i> Venue / Hall Rental</span>
+                    </label>
+
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="decoration_required" value="true" checked>
+                        <span class="check-label"><i class="fa-solid fa-wand-magic"></i> Theme Decoration</span>
+                    </label>
+
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="cake_required" value="true" checked>
+                        <span class="check-label"><i class="fa-solid fa-cake-candles"></i> Celebration Cake</span>
+                    </label>
+
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="entertainment_required" value="true" checked>
+                        <span class="check-label"><i class="fa-solid fa-music"></i> DJ & Music System</span>
+                    </label>
+
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="photography_required" value="true">
+                        <span class="check-label"><i class="fa-solid fa-camera"></i> Photographer</span>
+                    </label>
+
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="transport_required" value="true">
+                        <span class="check-label"><i class="fa-solid fa-van-shuttle"></i> Guest Transport</span>
+                    </label>
+
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="accommodation_required" value="true">
+                        <span class="check-label"><i class="fa-solid fa-bed"></i> Hotel Stay (OYO)</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 3. Food & Preferences -->
+            <div style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 1.5rem; margin-bottom: 1.75rem;">
+                <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: #f472b6;">
+                    <i class="fa-solid fa-bowl-food"></i> 3. Catering & Special Notes
+                </h3>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label class="form-label" for="food_preference">Food Preference</label>
+                        <select name="food_preference" id="food_preference" class="form-control">
+                            <option value="Multi-Cuisine" selected>Multi-Cuisine (Veg & Non-Veg)</option>
+                            <option value="Pure Vegetarian">Pure Vegetarian</option>
+                            <option value="Non-Vegetarian Focused">Non-Vegetarian Special</option>
+                            <option value="South Indian Traditional">South Indian Traditional Feast</option>
+                            <option value="North Indian Delicacies">North Indian Delicacies</option>
+                            <option value="Continental & Finger Foods">Continental / Finger Foods</option>
+                            <option value="Vegan / Jain Friendly">Vegan / Jain Friendly</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="event_date">Event Date (Optional)</label>
+                        <input type="date" id="event_date" name="event_date" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="additional_requirements">Special Requests & Notes (Optional)</label>
+                    <textarea id="additional_requirements" name="additional_requirements" class="form-control" placeholder="Theme color preferences, live cooking counters, outdoor pool setup, welcome drinks..."></textarea>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary btn-block btn-lg btn-glow">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate AI Party Budget & Packages
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
